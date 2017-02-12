@@ -1,0 +1,4 @@
+<?
+
+$MESS["DATA_LAYER_MODULE_NAME"] = "DataLayer";
+$MESS["DATA_LAYER_MODULE_DESCRIPTION"] = "DataLayer";
