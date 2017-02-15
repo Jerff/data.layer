@@ -15,19 +15,18 @@ if (class_exists('data_layer'))
 
 class data_layer extends CModule {
 
-    var $MODULE_ID = 'data.layer';
-    var $MODULE_VERSION;
-    var $MODULE_VERSION_DATE;
-    var $MODULE_NAME;
-    var $MODULE_ICON = "";
-    var $MODULE_SORT = 1;
-    var $MODULE_DESCRIPTION;
-    var $MODULE_GROUP_RIGHTS = 'N';
-    var $PARTNER_NAME;
-    var $PARTNER_URI;
+    public $MODULE_ID = 'data.layer';
+    public $MODULE_VERSION;
+    public $MODULE_VERSION_DATE;
+    public $MODULE_NAME;
+    public $MODULE_ICON = "";
+    public $MODULE_SORT = 1;
+    public $MODULE_DESCRIPTION;
+    public $MODULE_GROUP_RIGHTS = 'N';
+    public $PARTNER_NAME;
+    public $PARTNER_URI;
 
     public function __construct() {
-
         $arModuleVersion = array();
 
         $path = str_replace('\\', '/', __FILE__);
@@ -45,49 +44,22 @@ class data_layer extends CModule {
         $this->PARTNER_URI = '';
     }
 
-    function DoInstall() {
-        global $DB, $APPLICATION;
-
-        $this->installFiles();
+    private function DoInstall() {
         $this->installDB();
-        $this->installEvents();
     }
 
-    function installDB() {
+    private function installDB() {
         registerModule($this->MODULE_ID);
         return true;
     }
 
-    function installEvents() {
-        $eventManager = Bitrix\Main\EventManager::getInstance();
-        $eventManager->registerEventHandler('main', 'OnEndBufferContent', $this->MODULE_ID, '\Data\Layer\Event', 'OnEndBufferContent');
-        return true;
-    }
-
-    function installFiles() {
-        return true;
-    }
-
-    function DoUninstall() {
+    private function DoUninstall() {
         $this->uninstallDB();
-        $this->uninstallFiles();
-        $this->uninstallEvents();
     }
 
-    function uninstallDB($arParams = array()) {
-
+    private function uninstallDB($arParams = array()) {
         Option::delete($this->MODULE_ID);
         unregisterModule($this->MODULE_ID);
-        return true;
-    }
-
-    function uninstallEvents() {
-        $eventManager = Bitrix\Main\EventManager::getInstance();
-        $eventManager->unregisterEventHandler('main', 'OnEndBufferContent', $this->MODULE_ID);
-        return true;
-    }
-
-    function uninstallFiles() {
         return true;
     }
 
