@@ -1,13 +1,7 @@
 <?php
 
-/**
- * Micro Marking
- * @package hl
- * @subpackage main
- * @copyright 2001-2013 HotLab
- */
-use \Bitrix\Main\Localization\Loc;
-use \Bitrix\Main\Config\Option;
+use Bitrix\Main\Localization\Loc,
+    Bitrix\Main\ModuleManager;
 
 Loc::loadMessages(__FILE__);
 if (class_exists('data_layer'))
@@ -16,22 +10,11 @@ if (class_exists('data_layer'))
 class data_layer extends CModule {
 
     public $MODULE_ID = 'data.layer';
-    public $MODULE_VERSION;
-    public $MODULE_VERSION_DATE;
-    public $MODULE_NAME;
-    public $MODULE_ICON = "";
-    public $MODULE_SORT = 1;
-    public $MODULE_DESCRIPTION;
-    public $MODULE_GROUP_RIGHTS = 'N';
-    public $PARTNER_NAME;
-    public $PARTNER_URI;
 
-    public function __construct() {
+    function __construct() {
         $arModuleVersion = array();
 
-        $path = str_replace('\\', '/', __FILE__);
-        $path = substr($path, 0, strlen($path) - strlen('/index.php'));
-        include($path . '/version.php');
+        include(__DIR__ . '/version.php');
 
         if (is_array($arModuleVersion) && array_key_exists('VERSION', $arModuleVersion)) {
             $this->MODULE_VERSION = $arModuleVersion['VERSION'];
@@ -44,23 +27,12 @@ class data_layer extends CModule {
         $this->PARTNER_URI = '';
     }
 
-    private function DoInstall() {
-        $this->installDB();
+    public function DoInstall() {
+        ModuleManager::registerModule($this->MODULE_ID);
     }
 
-    private function installDB() {
-        registerModule($this->MODULE_ID);
-        return true;
-    }
-
-    private function DoUninstall() {
-        $this->uninstallDB();
-    }
-
-    private function uninstallDB($arParams = array()) {
-        Option::delete($this->MODULE_ID);
-        unregisterModule($this->MODULE_ID);
-        return true;
+    public function DoUninstall() {
+        ModuleManager::unRegisterModule($this->MODULE_ID);
     }
 
 }
